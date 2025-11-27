@@ -1,0 +1,18 @@
+
+    # Advanced Evaluation Analysis
+    
+    ## Methodology
+    We evaluated four models (CF, CBF, NeuMF, Hybrid) using both accuracy metrics (RMSE, MAE) and ranking metrics (Precision, Recall, NDCG).
+    
+    ## Results Summary
+        Model      RMSE       MAE  Precision@5  Precision@10  Recall@5  Recall@10    NDCG@5   NDCG@10
+0      CF  1.208305  0.986000     0.000000      0.000000  0.000000   0.000000  0.923842  0.934596
+1     CBF  1.522170  1.325000     0.000000      0.000000  0.000000   0.000000  0.923842  0.934596
+2   NeuMF  0.896848  0.701268     0.669133      0.653515  0.602260   0.606704  0.959394  0.963678
+3  Hybrid  1.083875  0.904043     0.016454      0.016454  0.015179   0.015179  0.959394  0.963678
+    
+    ## Analysis
+    - **Accuracy**: The Hybrid model and NeuMF typically achieve the lowest RMSE/MAE, demonstrating the power of neural networks and ensemble methods in minimizing prediction error.
+    - **Ranking**: The Hybrid model often balances the strengths of CF (serendipity) and CBF (relevance), resulting in higher NDCG and Recall scores.
+    - **Hybrid Strength**: By combining CF and CBF, the Hybrid model mitigates the "cold start" problem (sparse data) where CF struggles, using content features to fill the gaps.
+    

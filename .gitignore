@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# TensorFlow / Model Checkpoints
+*.h5
+*.hdf5
+*.ckpt
+*.pb
+checkpoints/
+logs/
+tensorboard/
+
+# Large Dataset Files (CSV)
+DATA/*.csv
+DATA/*.zip
+DATA/*.json
+!DATA/README.md
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Temporary Files
+*.tmp
+*.temp
+*.log
+*.cache
+
+# Build / Distribution
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Keep Evaluation Outputs
+!EVALUATIONS/*.csv
+!EVALUATIONS/*.png
+!EVALUATIONS/*.txt

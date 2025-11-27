@@ -1,0 +1,2 @@
+Collaborative Filtering RMSE: 1.1915
+Neural Collaborative Filtering RMSE: 0.9128
