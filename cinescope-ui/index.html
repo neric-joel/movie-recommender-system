@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineScope - Discover Similar Movies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0B0F1A 0%, #1B2735 100%);
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glow {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .glow-hover:hover {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.07) translateY(-8px);
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.4), 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .movie-card:hover .movie-title {
+            transform: translateY(-4px);
+            color: #8B5CF6;
+        }
+
+        .movie-card:hover .poster-overlay {
+            opacity: 1;
+        }
+
+        .poster-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(139, 92, 246, 0.4), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #8B5CF6, #10B981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-glow:focus {
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3), 0 0 30px rgba(139, 92, 246, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(16, 185, 129, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15), transparent 70%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7C3AED, #6D28D9);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(27, 39, 53, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .autocomplete-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .highlight {
+            color: #8B5CF6;
+            font-weight: 600;
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #9CA3AF;
+        }
+    </style>
+</head>
+
+<body class="text-white">
+    <nav class="fixed top-0 w-full z-50 glass border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold gradient-text">CineScope</h1>
+                    <div class="hidden md:flex space-x-6 text-sm">
+                        <a href="#" onclick="showPage('home')" class="hover:text-purple-400 transition">Home</a>
+                        <a href="#" onclick="showPage('recommendations')"
+                            class="hover:text-purple-400 transition">Recommendations</a>
+                        <a href="#" onclick="showPage('watchlist')"
+                            class="hover:text-purple-400 transition">Watchlist</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-user-circle text-2xl text-purple-400 cursor-pointer"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="app" class="pt-20">
+        <div id="home-page" class="page">
+            <div class="hero-gradient min-h-screen flex items-center justify-center px-4">
+                <div class="max-w-4xl w-full text-center">
+                    <h1 class="text-6xl md:text-7xl font-bold mb-6 fade-in">
+                        Discover Your Next <span class="gradient-text">Favorite Film</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-12 fade-in" style="animation-delay: 0.2s;">
+                        Find movies similar to what you love with AI-powered recommendations
+                    </p>
+
+                    <div class="glass rounded-2xl p-8 glow max-w-2xl mx-auto fade-in" style="animation-delay: 0.4s;">
+                        <form onsubmit="searchMovie(event)" class="relative">
+                            <input type="text" id="search-input" placeholder="Search for a movie..." autocomplete="off"
+                                oninput="handleSearchInput(event)" onfocus="handleSearchFocus()"
+                                class="w-full bg-white/5 border border-white/20 rounded-xl px-6 py-4 text-lg focus:outline-none search-glow transition">
+                            <button type="submit"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 btn-primary px-6 py-2 rounded-lg font-semibold">
+                                <i class="fas fa-search mr-2"></i>Search
+                            </button>
+                            <div id="autocomplete-dropdown" class="autocomplete-dropdown hidden"></div>
+                        </form>
+
+                        <div class="mt-6 flex flex-wrap gap-2 justify-center">
+                            <span class="text-sm text-gray-400">Try:</span>
+                            <button onclick="quickSearch('Avatar')"
+                                class="text-sm bg-white/5 hover:bg-white/10 px-3 py-1 rounded-full transition">Avatar</button>
+                            <button onclick="quickSearch('The Dark Knight')"
+                                class="text-sm bg-white/5 hover:bg-white/10 px-3 py-1 rounded-full transition">The Dark
+                                Knight</button>
+                            <button onclick="quickSearch('Toy Story')"
+                                class="text-sm bg-white/5 hover:bg-white/10 px-3 py-1 rounded-full transition">Toy
+                                Story</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="recommendations-page" class="page hidden">
+            <div class="max-w-7xl mx-auto px-6 py-12">
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold mb-2">Similar to <span id="searched-movie"
+                            class="gradient-text"></span></h2>
+                    <p class="text-gray-400">Discover movies with similar themes and styles</p>
+                </div>
+                <div id="recommendations-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"></div>
+            </div>
+        </div>
+
+        <div id="movie-details-page" class="page hidden">
+            <div id="movie-details-content"></div>
+        </div>
+
+        <div id="watchlist-page" class="page hidden">
+            <div class="max-w-7xl mx-auto px-6 py-12">
+                <h2 class="text-4xl font-bold mb-8">My Watchlist</h2>
+                <div id="watchlist-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="cinescope.js"></script>
+</body>
+
+</html>

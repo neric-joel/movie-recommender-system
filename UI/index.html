@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieFlix - Hybrid Recommendation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #141414;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .netflix-red {
+            background-color: #E50914;
+        }
+        
+        .netflix-red-hover:hover {
+            background-color: #F40612;
+        }
+        
+        .movie-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(229, 9, 20, 0.4);
+        }
+        
+        .skeleton {
+            animation: skeleton-loading 1s linear infinite alternate;
+        }
+        
+        @keyframes skeleton-loading {
+            0% {
+                background-color: hsl(200, 20%, 70%);
+            }
+            100% {
+                background-color: hsl(200, 20%, 95%);
+            }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        .hero-banner {
+            background: linear-gradient(to bottom, rgba(20,20,20,0.1), rgba(20,20,20,1)),
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent px-8 py-4">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <div class="flex items-center space-x-8">
+                <h1 class="text-3xl font-bold netflix-red text-white">MovieFlix</h1>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#" onclick="showPage('home')" class="hover:text-gray-300 transition">Home</a>
+                    <a href="#" onclick="showPage('recommendations')" class="hover:text-gray-300 transition">Recommendations</a>
+                    <a href="#" onclick="showPage('watchlist')" class="hover:text-gray-300 transition">My Watchlist</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-search cursor-pointer hover:text-gray-300"></i>
+                <i class="fas fa-bell cursor-pointer hover:text-gray-300"></i>
+                <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
+                    <span class="text-sm font-bold">U</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div id="app" class="pt-20">
+        <!-- Home Page -->
+        <div id="home-page" class="page">
+            <div class="hero-banner min-h-screen flex items-center justify-center">
+                <div class="text-center px-4">
+                    <h1 class="text-6xl font-bold mb-6">Discover Your Next Favorite Movie</h1>
+                    <p class="text-xl text-gray-300 mb-8">Powered by AI-driven hybrid recommendations</p>
+                    
+                    <!-- User Selection -->
+                    <div class="mb-8">
+                        <label class="block text-sm mb-2">Select User</label>
+                        <select id="user-select" class="bg-gray-800 text-white px-6 py-3 rounded-lg border border-gray-700 focus:outline-none focus:border-red-600">
+                            <option value="1">User 1</option>
+                            <option value="2">User 2</option>
+                            <option value="3">User 3</option>
+                            <option value="4">User 4</option>
+                            <option value="5">User 5</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Main CTA Button -->
+                    <button onclick="getRecommendations()" class="netflix-red netflix-red-hover text-white px-12 py-4 rounded-lg text-xl font-semibold transition transform hover:scale-105">
+                        <i class="fas fa-play mr-2"></i>
+                        Get Movie Recommendations
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Page -->
+        <div id="recommendations-page" class="page hidden">
+            <div class="max-w-7xl mx-auto px-8 py-12">
+                <h2 class="text-4xl font-bold mb-8">Recommended For You</h2>
+                <div id="recommendations-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Movie cards will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Movie Details Page -->
+        <div id="movie-details-page" class="page hidden">
+            <div id="movie-details-content">
+                <!-- Movie details will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Watchlist Page -->
+        <div id="watchlist-page" class="page hidden">
+            <div class="max-w-7xl mx-auto px-8 py-12">
+                <h2 class="text-4xl font-bold mb-8">My Watchlist</h2>
+                <div id="watchlist-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Watchlist items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
