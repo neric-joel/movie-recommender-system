@@ -6,8 +6,11 @@
 
 ## Team Members
 - Neric Joel (naruljoe@asu.edu)
-- [Add team member 2]
-- [Add team member 3]
+- Vatsal Nirmal
+- Tanay Parikh
+- Maulik Jadav
+- Omkar Korate
+- Ashin Kunjumon
 
 ## Project Overview
 
