@@ -5,7 +5,7 @@
 **Institution**: Arizona State University
 
 ## Team Members
-- Joel Narul (naruljoe@asu.edu)
+- Neric Joel (naruljoe@asu.edu)
 - [Add team member 2]
 - [Add team member 3]
 
