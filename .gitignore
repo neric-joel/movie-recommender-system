@@ -62,3 +62,4 @@ dist/
 !EVALUATIONS/*.csv
 !EVALUATIONS/*.png
 !EVALUATIONS/*.txt
+.claude/settings.local.json
